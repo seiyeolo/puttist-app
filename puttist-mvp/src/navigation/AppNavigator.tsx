@@ -13,6 +13,7 @@ import DuoModeScreen from '../screens/DuoModeScreen';
 import TempoScreen from '../screens/TempoScreen';
 import StatsScreen from '../screens/StatsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import VisionScreen from '../screens/VisionScreen';
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -27,6 +28,7 @@ export type MainTabParamList = {
   Tempo: undefined;
   Stats: undefined;
   Settings: undefined;
+  Vision: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -90,6 +92,14 @@ function MainTabs() {
       <Tab.Screen name="DuoMode" component={DuoModeScreen} options={{ title: '듀오' }} />
       <Tab.Screen name="Tempo" component={TempoScreen} options={{ title: '템포' }} />
       <Tab.Screen name="Stats" component={StatsScreen} options={{ title: '통계' }} />
+      <Tab.Screen 
+        name="Vision" 
+        component={VisionScreen} 
+        options={{ 
+          title: 'AI 비전',
+          tabBarLabel: 'AI 비전'
+        }} 
+      />
     </Tab.Navigator>
   );
 }
