@@ -1,0 +1,4 @@
+flask
+ollama
+pillow
+flask-cors

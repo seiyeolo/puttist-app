@@ -1,78 +1,49 @@
-# 퍼티스트 MVP
+# Puttist Vision AI Server (Prototype)
 
-## 프로젝트 개요
-퍼티스트 퍼팅 연습 앱의 MVP 버전입니다. React Native (Expo)로 개발되었습니다.
+이 프로젝트는 **Puttist 디지털 퍼팅 미터**의 LED 디스플레이를 카메라로 읽어, 숫자로 변환하는 **Vision AI 서버**입니다.
+MacBook(또는 Mac Mini)에서 실행되며, 모바일 앱이나 웹캠으로부터 이미지를 받아 처리합니다.
 
-## 주요 기능
-- ✅ 로컬 프로필 생성 및 관리
-- ✅ 일반 모드 연습 기록
-- ✅ 5가지 게임 모드 (3-6-9, 7-up, 7-down, 7-random, 9-random)
-- ✅ 거리별/일별 통계 차트
-- ✅ 데이터 백업/복원
-- ✅ 다크 모드 UI
+## 📁 파일 구성
+- `server.py`: Flask 기반의 메인 AI 서버 코드
+- `requirements.txt`: 필수 파이썬 라이브러리 목록
 
-## 기술 스택
-- React Native (Expo)
-- TypeScript
-- Zustand (상태 관리)
-- AsyncStorage (데이터 저장)
-- React Navigation (네비게이션)
-- React Native Chart Kit (차트)
+## 🚀 설치 및 실행 방법
 
-## 실행 방법
-
-### 1. 패키지 설치
+### 1. 환경 설정
+터미널에서 이 폴더로 이동한 후 실행하세요:
 ```bash
-npm install
+# 가상환경 생성 (선택사항)
+python3 -m venv venv
+source venv/bin/activate
+
+# 필수 라이브러리 설치
+pip install -r requirements.txt
 ```
 
-### 2. 개발 서버 실행
+### 2. Ollama 모델 준비
+이 서버는 `qwen3-vl:8b` 모델을 사용합니다. 미리 다운로드해 두세요:
 ```bash
-npx expo start
+ollama pull qwen3-vl:8b
 ```
 
-### 3. 앱 실행
-- iOS 시뮬레이터: `i` 키 입력
-- Android 에뮬레이터: `a` 키 입력
-- Expo Go 앱: QR 코드 스캔
+### 3. 서버 실행
+```bash
+python3 server.py
+```
+서버가 정상적으로 실행되면 `http://0.0.0.0:5000` 주소로 대기합니다.
 
-## 테스트 시나리오
+## 🔄 워크플로우 (MacBook -> Mac Mini)
+1. **MacBook**: 코드를 작성하고 GitHub에 Push 합니다.
+2. **Mac Mini**: GitHub에서 Pull 받은 후, 위와 동일하게 서버를 실행합니다.
+   - Mac Mini는 퍼팅 매트 앞에 고정하여 **전용 분석 스테이션**으로 활용하기 좋습니다.
 
-### 1. 프로필 생성
-- 앱 실행 → 닉네임 입력 → 아바타 선택 → 시작하기
-
-### 2. 일반 연습
-- 연습 탭 → 목표/실제 거리 입력 → 기록하기
-
-### 3. 게임 모드
-- 게임 탭 → 모드 선택 → 거리 입력 → 점수 확인
-
-### 4. 통계 확인
-- 통계 탭 → 거리별/일별 차트 확인
-
-### 5. 설정
-- 설정 탭 → 프로필 수정 / 데이터 백업
-
-## 성공 판정 규칙
-- 목표 거리 ≤ 실제 거리 ≤ 목표 거리 + 0.5m
-
-## MVP 완료 항목
-- [x] Expo 프로젝트 생성
-- [x] 패키지 설치 및 설정
-- [x] 폴더 구조 설정
-- [x] 네비게이션 구조
-- [x] 사용자 인증 (로컬)
-- [x] 홈 화면
-- [x] 연습 기록 화면
-- [x] 게임 모드
-- [x] 통계 대시보드
-- [x] 설정 화면
-- [x] 데이터 저장 로직
-- [x] 다크 테마 스타일링
-
-## MVP_COMPLETE ✅
-
----
-개발: Ralph Loop
-버전: 1.0.0 MVP
-날짜: 2026.01.03
+## 📱 API 사용법
+**POST** `/analyze`
+- **Body**: `image` (Multipart Form Data - 이미지 파일)
+- **Response**:
+  ```json
+  {
+    "status": "success",
+    "result": "3.5"
+  }
+  ```
