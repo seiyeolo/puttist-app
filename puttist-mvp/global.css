@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Puttist Golf Theme - Dark Mode */
+:root {
+  /* Primary Colors - Golf Green */
+  --color-primary-0: #E8F5E9;
+  --color-primary-50: #C8E6C9;
+  --color-primary-100: #A5D6A7;
+  --color-primary-200: #81C784;
+  --color-primary-300: #66BB6A;
+  --color-primary-400: #4CAF50;
+  --color-primary-500: #2E7D32;
+  --color-primary-600: #228B22;
+  --color-primary-700: #1B5E20;
+  --color-primary-800: #145214;
+  --color-primary-900: #0D3D0D;
+  --color-primary-950: #062806;
+
+  /* Secondary Colors - Gold */
+  --color-secondary-0: #FFFEF0;
+  --color-secondary-50: #FFF8E1;
+  --color-secondary-100: #FFECB3;
+  --color-secondary-200: #FFE082;
+  --color-secondary-300: #FFD54F;
+  --color-secondary-400: #FFCA28;
+  --color-secondary-500: #D4AF37;
+  --color-secondary-600: #FFC107;
+  --color-secondary-700: #FFB300;
+  --color-secondary-800: #FFA000;
+  --color-secondary-900: #FF8F00;
+  --color-secondary-950: #E65100;
+
+  /* Background Colors - Dark Green Theme */
+  --color-background-0: #0D1B0F;
+  --color-background-50: #121F14;
+  --color-background-100: #162318;
+  --color-background-200: #1A2E1C;
+  --color-background-300: #243826;
+  --color-background-400: #2E4830;
+  --color-background-500: #3D5940;
+  --color-background-600: #4D6A50;
+  --color-background-700: #5D7B60;
+  --color-background-800: #6D8C70;
+  --color-background-900: #7D9D80;
+  --color-background-950: #8DAE90;
+
+  /* Typography Colors */
+  --color-typography-0: #FFFFFF;
+  --color-typography-50: #F5F5F5;
+  --color-typography-100: #E8E8E8;
+  --color-typography-200: #D4D4D4;
+  --color-typography-300: #A5D6A7;
+  --color-typography-400: #81C784;
+  --color-typography-500: #6B8E6E;
+  --color-typography-600: #5A7D5C;
+  --color-typography-700: #4A6C4B;
+  --color-typography-800: #3A5B3A;
+  --color-typography-900: #2A4A29;
+  --color-typography-950: #1A3918;
+
+  /* Outline Colors */
+  --color-outline-0: #FFFFFF;
+  --color-outline-50: #E8F5E9;
+  --color-outline-100: #C8E6C9;
+  --color-outline-200: #3D5940;
+  --color-outline-300: #2E4830;
+  --color-outline-400: #243826;
+  --color-outline-500: #1A2E1C;
+  --color-outline-600: #162318;
+  --color-outline-700: #121F14;
+  --color-outline-800: #0D1B0F;
+  --color-outline-900: #080F08;
+  --color-outline-950: #040804;
+
+  /* Success Colors */
+  --color-success-0: #E8F5E9;
+  --color-success-50: #C8E6C9;
+  --color-success-100: #A5D6A7;
+  --color-success-200: #81C784;
+  --color-success-300: #66BB6A;
+  --color-success-400: #4CAF50;
+  --color-success-500: #43A047;
+  --color-success-600: #388E3C;
+  --color-success-700: #2E7D32;
+  --color-success-800: #1B5E20;
+  --color-success-900: #145214;
+  --color-success-950: #0D3D0D;
+
+  /* Error Colors */
+  --color-error-0: #FFEBEE;
+  --color-error-50: #FFCDD2;
+  --color-error-100: #EF9A9A;
+  --color-error-200: #E57373;
+  --color-error-300: #EF5350;
+  --color-error-400: #F44336;
+  --color-error-500: #E53935;
+  --color-error-600: #D32F2F;
+  --color-error-700: #C62828;
+  --color-error-800: #B71C1C;
+  --color-error-900: #8B0000;
+  --color-error-950: #5C0000;
+
+  /* Warning Colors */
+  --color-warning-0: #FFF8E1;
+  --color-warning-50: #FFECB3;
+  --color-warning-100: #FFE082;
+  --color-warning-200: #FFD54F;
+  --color-warning-300: #FFCA28;
+  --color-warning-400: #FFC107;
+  --color-warning-500: #FFB300;
+  --color-warning-600: #FFA000;
+  --color-warning-700: #FF8F00;
+  --color-warning-800: #FF6F00;
+  --color-warning-900: #E65100;
+  --color-warning-950: #BF360C;
+}

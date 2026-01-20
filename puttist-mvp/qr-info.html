@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>퍼티스트 앱 QR 코드</title>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: #2a2a2a;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        h1 {
+            color: #228B22;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #90EE90;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+        #qrcode {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto 30px;
+            width: fit-content;
+        }
+        .info {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .info h3 {
+            color: #90EE90;
+            margin-top: 0;
+        }
+        .url {
+            background: #0a0a0a;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            word-break: break-all;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .url:hover {
+            background: #228B22;
+        }
+        .step {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .emoji {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .success {
+            background: #228B22;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⛳ 퍼티스트</h1>
+        <div class="subtitle">퍼팅 연습 앱</div>
+
+        <div id="qrcode"></div>
+
+        <div class="info">
+            <h3>📱 Expo Go 앱에서 스캔하세요</h3>
+            <div class="url" onclick="copyToClipboard(this)">
+                exp://192.168.0.9:8081
+            </div>
+        </div>
+
+        <div class="info">
+            <h3>🚀 연결 방법</h3>
+            <div class="step">
+                <span class="emoji">1️⃣</span> Expo Go 앱 설치 (App Store / Play Store)
+            </div>
+            <div class="step">
+                <span class="emoji">2️⃣</span> 같은 Wi-Fi 네트워크 연결
+            </div>
+            <div class="step">
+                <span class="emoji">3️⃣</span> QR 코드 스캔 또는 URL 입력
+            </div>
+        </div>
+
+        <div class="info">
+            <h3>✨ MVP 기능</h3>
+            <div class="step">✅ 자유 연습 & 커스텀 도전</div>
+            <div class="step">✅ 5가지 게임 모드</div>
+            <div class="step">✅ 실시간 통계 차트</div>
+            <div class="step">✅ 데이터 백업/복원</div>
+        </div>
+
+        <div class="success" id="copySuccess">
+            URL이 클립보드에 복사되었습니다! 📋
+        </div>
+    </div>
+
+    <script>
+        // QR 코드 생성
+        new QRCode(document.getElementById("qrcode"), {
+            text: "exp://192.168.0.9:8081",
+            width: 256,
+            height: 256,
+            colorDark : "#000000",
+            colorLight : "#ffffff",
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        // URL 복사 기능
+        function copyToClipboard(element) {
+            const text = element.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const success = document.getElementById('copySuccess');
+                success.style.display = 'block';
+                setTimeout(() => {
+                    success.style.display = 'none';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
