@@ -29,7 +29,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "퍼팅 라인 인식을 위해 카메라 권한이 필요합니다."
+        }
+      ]
     ],
     "extra": {
       "eas": {
