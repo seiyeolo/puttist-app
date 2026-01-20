@@ -141,6 +141,7 @@ export const GAME_MODES = {
   SEVEN_DOWN: '7-down' as const,
   SEVEN_RANDOM: '7-random' as const,
   NINE_RANDOM: '9-random' as const,
+  DUO_AI_REFEREE: 'duo-ai-referee' as const,
 };
 
 // Storage Keys

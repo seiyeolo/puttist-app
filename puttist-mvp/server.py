@@ -11,6 +11,10 @@ CORS(app)  # Allow mobile app to connect
 
 MODEL_NAME = "qwen3-vl:8b"
 
+@app.route('/', methods=['GET'])
+def health_check():
+    return "Vision AI Server is Running! 🚀"
+
 @app.route('/analyze', methods=['POST'])
 def analyze_image():
     if 'image' not in request.files:
@@ -47,9 +51,7 @@ def analyze_image():
         print(f"❌ Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/', methods=['GET'])
-def health_check():
-    return "<h2>Puttist Vision AI Server is Running! 🟢</h2>"
+
 
 if __name__ == '__main__':
     # Listen on all interfaces so mobile can connect

@@ -3,17 +3,19 @@ import { StyleSheet, Text, View, TouchableOpacity, TextInput, Alert, ScrollView 
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { COLORS } from '../constants/theme';
 import { Ionicons } from '@expo/vector-icons';
-import * as FileSystem from 'expo-file-system';
-import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+import { useVision } from '../hooks/useVision';
 
 export default function VisionScreen() {
-  const [permission, requestPermission] = useCameraPermissions();
-  const [serverIp, setServerIp] = useState('192.168.0.XX'); // IP of Mac Mini
-  const [isScanning, setIsScanning] = useState(false);
-  const [lastResult, setLastResult] = useState<string | null>(null);
-  const [logs, setLogs] = useState<string[]>([]);
-  const cameraRef = useRef<CameraView>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [serverIp, setServerIp] = useState('192.168.0.145'); // Default IP
+  const {
+    permission,
+    requestPermission,
+    isScanning,
+    toggleScanning,
+    lastResult,
+    logs,
+    cameraRef
+  } = useVision(serverIp);
 
   if (!permission) {
     return (
@@ -33,97 +35,6 @@ export default function VisionScreen() {
       </View>
     );
   }
-
-  const toggleScanning = () => {
-    if (isScanning) {
-      stopScanning();
-    } else {
-      startScanning();
-    }
-  };
-
-  const startScanning = () => {
-    setIsScanning(true);
-    addLog('스캔 시작 (5초 간격)');
-    
-    // Immediate first capture
-    captureAndSend();
-
-    // Loop
-    intervalRef.current = setInterval(captureAndSend, 5000); // 5 seconds
-  };
-
-  const stopScanning = () => {
-    setIsScanning(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-      intervalRef.current = null;
-    }
-    addLog('스캔 중지');
-  };
-
-  const addLog = (msg: string) => {
-    setLogs(prev => [`[${new Date().toLocaleTimeString()}] ${msg}`, ...prev].slice(0, 10));
-  };
-
-  const captureAndSend = async () => {
-    if (!cameraRef.current) return;
-
-    try {
-      addLog('촬영 중...');
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 0.5,
-        base64: false,
-      });
-
-      if (photo?.uri) {
-        // Resize to reduce upload size (optional but good for speed)
-        const manipResult = await manipulateAsync(
-            photo.uri,
-            [{ resize: { width: 800 } }],
-            { compress: 0.7, format: SaveFormat.JPEG }
-        );
-        uploadImage(manipResult.uri);
-      }
-    } catch (e) {
-      addLog(`촬영 에러: ${e}`);
-    }
-  };
-
-  const uploadImage = async (uri: string) => {
-    const formData = new FormData();
-    // @ts-ignore
-    formData.append('image', {
-      uri: uri,
-      name: 'capture.jpg',
-      type: 'image/jpeg',
-    });
-
-    try {
-      const url = `http://${serverIp}:5000/analyze`;
-      addLog(`전송 중... ${url}`);
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        body: formData,
-      });
-
-      const json = await response.json();
-      if (json.status === 'success') {
-        const result = json.result; // "3.5" or "0"
-        setLastResult(result);
-        addLog(`✅ 결과: ${result}m`);
-      } else {
-        addLog(`❌ 서버 에러: ${json.error}`);
-      }
-    } catch (e) {
-      addLog(`❌ 연결 실패 (IP 확인 필요)`);
-      console.log(e);
-    }
-  };
 
   return (
     <View style={styles.container}>

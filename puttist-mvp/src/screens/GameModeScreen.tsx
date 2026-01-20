@@ -25,6 +25,8 @@ import {
 } from '../constants/theme';
 import { GameMode } from '../types';
 
+
+
 // 게임 모드 배열을 컴포넌트 외부에 정의 (상수)
 const GAME_MODES_LIST: GameModeInfo[] = [
   {
@@ -62,6 +64,14 @@ const GAME_MODES_LIST: GameModeInfo[] = [
     description: '기기 연동 시 사용 가능',
     icon: 'dice',
     colors: ['#1E88E5', '#1565C0'],
+    comingSoon: true,
+  },
+  {
+    mode: GAME_MODES.DUO_AI_REFEREE,
+    title: 'AI 심판 (듀오)',
+    description: '카메라가 심판을 보는 듀오 게임',
+    icon: 'eye',
+    colors: ['#FF5722', '#E64A19'],
     comingSoon: true,
   },
 ];
@@ -268,7 +278,7 @@ interface GameModeInfo {
   mode: GameMode;
   title: string;
   description: string;
-  icon: keyof typeof Ionicons.glyphMap;
+  icon: any;
   colors: [string, string];
   comingSoon?: boolean;
 }

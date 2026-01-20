@@ -42,7 +42,8 @@ export type GameMode =
   | '7-up'
   | '7-down'
   | '7-random'
-  | '9-random';
+  | '9-random'
+  | 'duo-ai-referee';
 
 export interface GameData {
   currentRound?: number;

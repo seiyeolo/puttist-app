@@ -11,6 +11,7 @@ import {
   Platform,
   Animated,
   Vibration,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -25,6 +26,8 @@ import {
   TYPOGRAPHY,
   GAME_CONFIG,
 } from '../constants/theme';
+import { CameraView } from 'expo-camera';
+import { useVision } from '../hooks/useVision';
 
 // 원터치 거리 선택 버튼 (애니메이션 포함)
 const QuickDistanceButton = ({
@@ -154,6 +157,26 @@ export default function PracticeScreen() {
   const [elapsedTime, setElapsedTime] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Vision AI Hook
+  // TODO: Make Server IP configurable
+  const { isScanning, toggleScanning, lastResult, cameraRef } = useVision('192.168.0.145');
+  const [visionMode, setVisionMode] = useState(false);
+
+  // Auto-fill Actual Distance when Vision AI detects a result
+  useEffect(() => {
+    if (visionMode && lastResult) {
+      setActualDistance(lastResult);
+      // Auto-submit logic
+      handleFreeRecord(true); 
+    }
+  }, [visionMode, lastResult]); 
+  
+  // Toggle Vision Mode
+  const handleToggleVision = () => {
+    setVisionMode((prev) => !prev);
+    toggleScanning();
+  };
+
   useEffect(() => {
     if (challengeActive) {
       timerRef.current = setInterval(() => {
@@ -190,15 +213,17 @@ export default function PracticeScreen() {
     return actual >= target && actual <= target + GAME_CONFIG.SUCCESS_MARGIN;
   };
 
-  const handleFreeRecord = async () => {
+  const handleFreeRecord = async (silent = false) => {
     const target = validateDistance(targetDistance);
     const actual = validateDistance(actualDistance);
 
     if (!target || !actual) {
-      Alert.alert(
-        '입력 오류',
-        `거리는 ${GAME_CONFIG.MIN_DISTANCE}m ~ ${GAME_CONFIG.MAX_DISTANCE}m 사이여야 합니다.`
-      );
+      if (!silent) {
+        Alert.alert(
+          '입력 오류',
+          `거리는 ${GAME_CONFIG.MIN_DISTANCE}m ~ ${GAME_CONFIG.MAX_DISTANCE}m 사이여야 합니다.`
+        );
+      }
       return;
     }
 
@@ -215,15 +240,24 @@ export default function PracticeScreen() {
         sessionId: Date.now().toString(),
       });
 
-      setTargetDistance('');
+      // if not silent, clear target (manual mode)
+      // if silent (vision mode), keep target for continuous practice
+      if (!silent) {
+        setTargetDistance('');
+      }
       setActualDistance('');
 
-      Alert.alert(
-        success ? '성공!' : '실패',
-        `목표: ${target}m → 실제: ${actual}m\n${success ? '완벽해요!' : '다시 도전해보세요!'}`
-      );
+      if (!silent) {
+        Alert.alert(
+          success ? '성공!' : '실패',
+          `목표: ${target}m → 실제: ${actual}m\n${success ? '완벽해요!' : '다시 도전해보세요!'}`
+        );
+      } else {
+        // Simple feedback for auto-mode
+        Vibration.vibrate(success ? 100 : 300);
+      }
     } catch (error) {
-      Alert.alert('오류', '기록 저장에 실패했습니다.');
+      if (!silent) Alert.alert('오류', '기록 저장에 실패했습니다.');
     }
   };
 
@@ -409,6 +443,39 @@ export default function PracticeScreen() {
             {/* Free Practice Mode */}
             {practiceMode === 'free' && !challengeActive && (
               <View style={styles.formCard}>
+                {/* AI Vision Toggle */}
+                <View style={[styles.inputGroup, { marginBottom: 20 }]}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                            <Ionicons name="camera" size={20} color={COLORS.primary} />
+                            <Text style={styles.inputLabel}>AI Vision Mode</Text>
+                        </View>
+                        <Switch
+                            value={visionMode}
+                            onValueChange={handleToggleVision}
+                            trackColor={{ false: '#767577', true: COLORS.primary }}
+                            thumbColor={visionMode ? '#fff' : '#f4f3f4'}
+                        />
+                    </View>
+                    
+                    {visionMode && (
+                        <View style={{ height: 200, borderRadius: RADIUS.md, overflow: 'hidden', backgroundColor: '#000', marginBottom: 10 }}>
+                            {isScanning && (
+                                <CameraView
+                                    ref={cameraRef}
+                                    style={{ flex: 1 }}
+                                    facing="back"
+                                />
+                            )}
+                            <View style={{ position: 'absolute', bottom: 10, left: 10, backgroundColor: 'rgba(0,0,0,0.6)', padding: 6, borderRadius: 4 }}>
+                                <Text style={{ color: '#fff', fontSize: 12 }}>
+                                    {lastResult ? `감지됨: ${lastResult}m` : '스캔 중...'}
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+                </View>
+
                 {/* 원터치 거리 선택 */}
                 <View style={styles.inputGroup}>
                   <Text style={styles.inputLabel}>원터치 목표 거리</Text>
@@ -492,7 +559,7 @@ export default function PracticeScreen() {
                     styles.recordButton,
                     (!targetDistance || !actualDistance) && styles.buttonDisabled,
                   ]}
-                  onPress={handleFreeRecord}
+                  onPress={() => handleFreeRecord()}
                   disabled={!targetDistance || !actualDistance}
                   activeOpacity={0.8}
                 >
