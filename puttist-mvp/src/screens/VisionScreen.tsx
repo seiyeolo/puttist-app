@@ -16,7 +16,11 @@ export default function VisionScreen() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   if (!permission) {
-    return <View />;
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <Text style={{ color: '#fff' }}>카메라 권한 확인 중...</Text>
+      </View>
+    );
   }
 
   if (!permission.granted) {
